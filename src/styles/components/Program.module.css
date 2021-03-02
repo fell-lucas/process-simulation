@@ -4,7 +4,8 @@
   align-items: center;
   height: 2rem;
   background: var(--green);
-  border-radius: 5px;
+  /* border-radius: 5px; */
+  width: 150px;
 }
 
 .container span {
