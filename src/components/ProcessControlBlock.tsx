@@ -1,22 +1,18 @@
-import { useState } from "react"
-import { STATUS } from '../constants/ProcessStates'
+import { useEffect, useState } from "react"
+import { Program } from "./Program"
 
 interface ProcessControlBlockProps {
   pid: number
-  programCounter: number
-  state: typeof STATUS
-  registers: number[]
-  // program: Program
+  state: number
 }
 
-export function ProcessControlBlock({ ...rest }: ProcessControlBlockProps) {
-  const [pid, setPid] = useState(rest.pid)
-  const [programCounter, setProgramCounter] = useState(rest.programCounter)
-  const [state, setState] = useState(rest.state)
+export function ProcessControlBlock({ pid, state}: ProcessControlBlockProps) {
+  const [_pid, setPid] = useState(pid)
+  const [_state, setState] = useState(state)
 
+  useEffect(() => {
+    console.log(_pid)
+  }, [])
 
-
-  return (
-    <div></div>
-  )
+  return <Program state={_state} duration={Math.floor((Math.random() * 8) + 3)} />
 }
