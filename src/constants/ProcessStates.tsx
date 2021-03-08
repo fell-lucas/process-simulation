@@ -3,5 +3,6 @@ export const STATUS = {
   READY: 1,
   RUNNING: 2,
   WAITING: 3,
-  DEAD: 4
+  DEAD: 4,
+  BLOCKED: 5
 }

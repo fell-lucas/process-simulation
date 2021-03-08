@@ -1,71 +1,132 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { STATUS } from "../constants/ProcessStates"
+import { ProcessQueueContext } from "../contexts/ProcessQueue"
 import styles from '../styles/components/Program.module.css'
 
 interface ProgramProps {
   duration: number
   state: number
+  pid: number
+  priority: number
 }
 
 let countdownTimeout: NodeJS.Timeout
+let quantumTimeout: NodeJS.Timeout
 
-export function Program({...rest}:ProgramProps) {
+export function Program({ pid, priority, ...rest}:ProgramProps) {
+  const { tick, nextToRun } = useContext(ProcessQueueContext)
+
   const [duration, setDuration] = useState(rest.duration)
   const [render, setRender] = useState(true)
-  const [width, setWidth] = useState(20)
-  const [step, setStep] = useState(Math.floor((105 - width) / rest.duration))
+  const [width, setWidth] = useState(15)
+  const [step, setStep] = useState((100 - width) / rest.duration)
   const [state, setState] = useState(rest.state)
   const [isRunning, setIsRunning] = useState(false)
   const [color, setColor] = useState((Math.random()*0xFFFFFF<<0).toString(16))
+  const [quantum, setQuantum] = useState(-1)
+  const [quantumAux, setQuantumAux] = useState(quantum)
+  const [addedPriority, setAddedPriority] = useState(0)
 
   useEffect(() => {
     switch (state) {
       case STATUS.NEW:
+        setColor(color)
         break;
       case STATUS.READY:
-        setTimeout(() => {
-          setState(STATUS.RUNNING)
-          // console.log(step)
-        }, 10)
+        setColor(color)
+        if(nextToRun === pid && !isRunning) {
+          setTimeout(() => {
+            setState(STATUS.RUNNING)
+          }, 10)
+        } else {
+          setState(STATUS.WAITING)
+        }
+        setIsRunning(false)
         break;
       case STATUS.RUNNING:
+        setColor(color)
+        setQuantumAux(quantum)
         setIsRunning(true)
         break;
-      default:
+      case STATUS.WAITING:
+        setColor(color)
+        if(nextToRun === pid && !isRunning) {
+          setTimeout(() => {
+            setState(STATUS.RUNNING)
+          }, 10)
+        }
+        setIsRunning(false)
+        break;
+      case STATUS.DEAD:
+        setColor('000000')
+        setIsRunning(false)
+        setTimeout(() => {
+          setRender(false)
+        }, 2000)
+        break;
+      case STATUS.BLOCKED:
+        setColor('ff0000')
+        setTimeout(() => {
+          setColor(color)
+        }, 50)
+        setIsRunning(false)
+        if(nextToRun === pid && !isRunning) {
+          setTimeout(() => {
+            setState(STATUS.RUNNING)
+            
+          }, 10)
+        }
         break;
     }
     
-  }, [state])
+  }, [tick])
 
   useEffect(() => {
-    if(duration > 0 && state === STATUS.RUNNING) {
+    setColor(color)
+    if(duration > 0 && state === STATUS.RUNNING && quantumAux > 0) {
       countdownTimeout = setTimeout(() => {
+        setQuantumAux(quantumAux - 1)
+        if(quantumAux === 1) {
+          setState(STATUS.WAITING)
+          if(Math.floor(Math.random() * 100) < 10) {
+            setState(STATUS.BLOCKED)
+            setAddedPriority(Math.floor(Math.random() * 5 + 5))
+            priority += addedPriority
+          }
+        }
         setWidth(width + step)
         setDuration(duration - 1)
-      }, 1000)
+      }, 100)
     } else if (duration === 0) {
-      setRender(false)
+      setState(STATUS.DEAD)
     }
   }, [duration, isRunning])
 
+  useEffect(() => {
+    setState(STATUS.READY)
+    setQuantum(4)
+    setQuantumAux(4)
+  }, [])
+  
   return (
     <>
       { render && (
         <div 
           style={{
-            transition: `width linear 1s`,
+            transition: `width linear 0.2s`,
             width: `${width}%`,
             background: `${'#'+ color}`}} 
           className={styles.container}>
           <span>
-            I'm a program
+            P: { `${priority} (+${addedPriority})` }
           </span>
           <span>
             {duration}s
           </span>
-          <span>{state}</span>
+          <span>{Object.keys(STATUS).find(k => STATUS[k] === state)}</span>
         </div>
       )}
     </>
   )
 }
+
