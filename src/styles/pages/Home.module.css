@@ -2,11 +2,11 @@
   height: 100vh;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 2.5rem 0;
+  padding-top: 2.5rem;
 
   display: flex;
   flex-direction: column;
 }
 .title {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }

@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import { STATUS } from "../constants/ProcessStates"
 import { ProcessQueueContext } from "../contexts/ProcessQueue"
-import styles from '../styles/components/Program.module.css'
+import styles from '../styles/components/ProcessControlBlock.module.css'
 
-interface ProgramProps {
+interface ProcessControlBlockProps {
   duration: number
   state: number
   pid: number
@@ -11,14 +11,13 @@ interface ProgramProps {
 }
 
 let countdownTimeout: NodeJS.Timeout
-let quantumTimeout: NodeJS.Timeout
 
-export function Program({ pid, priority, ...rest}:ProgramProps) {
+export function ProcessControlBlock({ pid, priority, ...rest}:ProcessControlBlockProps) {
   const { tick, nextToRun } = useContext(ProcessQueueContext)
 
   const [duration, setDuration] = useState(rest.duration)
   const [render, setRender] = useState(true)
-  const [width, setWidth] = useState(15)
+  const [width, setWidth] = useState(25)
   const [step, setStep] = useState((100 - width) / rest.duration)
   const [state, setState] = useState(rest.state)
   const [isRunning, setIsRunning] = useState(false)

@@ -1,6 +1,7 @@
 .container {
   display: flex;
-  margin: 2rem 0;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .container button {

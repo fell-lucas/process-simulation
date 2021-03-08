@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { Program } from "../components/Program";
+import { ProcessControlBlock } from "../components/ProcessControlBlock";
 import { STATUS } from "../constants/ProcessStates";
 import styles from '../styles/contexts/ProcessQueue.module.css'
 
 interface ProcessQueueContextData {
   add: () => void
-  queue: typeof Program[]
+  queue: typeof ProcessControlBlock[]
   updtNextToRun: () => void
   nextToRun: number
   tick: number
@@ -25,13 +25,12 @@ export function ProcessQueueProvider({ children }:ProcessQueueProviderProps) {
   const [nextToRun, setNextToRun] = useState(currentPid)
 
   function add() {
-    setQueue(queue.concat(<Program 
+    setQueue(queue.concat(<ProcessControlBlock 
       key={currentPid} 
       pid={currentPid} 
       state={STATUS.NEW} 
       priority={Math.floor((Math.random() * 20) + 1)}
-      // duration={Math.floor((Math.random() * 20) + 10)} 
-      duration={30} 
+      duration={Math.floor((Math.random() * 20) + 10)} 
       />)
     )
     setCurrentPid(currentPid + 1)
