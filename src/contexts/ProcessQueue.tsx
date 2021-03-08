@@ -21,7 +21,12 @@ export function ProcessQueueProvider({ children, managedState }:ProcessQueueProv
   const { currentPid, updatePid } = useContext(OSContext)
 
   function add() {
-    setQueue(queue.concat(<ProcessControlBlock key={currentPid} pid={currentPid} state={managedState} />))
+    setQueue(queue.concat(<ProcessControlBlock 
+      key={currentPid} 
+      pid={currentPid} 
+      state={managedState}       
+      />)
+    )
     updatePid()
   }
 
@@ -31,12 +36,10 @@ export function ProcessQueueProvider({ children, managedState }:ProcessQueueProv
       add,
       managedState
     }}>
-      <div className={`${styles.queueContainer} queueContainer_${managedState}`}>
-        { children }
-        <section className={`${styles.programsContainer} queue_${managedState}`}>
-          {queue}
-        </section>
-      </div>
+      { children }
+      <section className={`${styles.programsContainer}`}>
+        {queue}
+      </section>
     </ProcessQueueContext.Provider>
   )
 }

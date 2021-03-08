@@ -6,13 +6,5 @@
   border: rgba(0, 0, 0, 0.2) 1px solid;
   overflow-y: scroll;
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
-  min-height: 16rem;
-  max-width: 1000px;
-}
-
-.queueContainer {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  max-height: 48rem;
+  min-height: 32rem;
 }
