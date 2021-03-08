@@ -12,6 +12,8 @@ export default function Home() {
           <title>OS Process Simulator</title>
         </Head>
         <h1 className={styles.title}>OS Process Simulator</h1>
+        <p>Warning: The spaghetti behind this project is noticeable. 
+          If the processes get stuck in waiting, please refresh the page.</p>
         <ProcessQueueProvider> 
           <Actions />
           <h2>Queue</h2>

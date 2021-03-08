@@ -22,4 +22,11 @@ O programa simplesmente busca simular o gerenciamento de processos que os
 sistemas operacionais efetuam, utilizando preempção e interrupções do sistema
 para realizar a troca de contexto. Prioridades de processos também estão presentes.
 
+<p align="center">
+  <a href="https://process-simulation.vercel.app">
+    <img src="preview.gif" alt="Preview">
+  </a>
+</p>
+
+
 Autor: Lucas Alexandre Fell
