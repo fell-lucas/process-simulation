@@ -3,7 +3,7 @@ import { STATUS } from "../constants/ProcessStates"
 import { ProcessQueueContext } from "../contexts/ProcessQueue"
 import styles from '../styles/components/ProcessControlBlock.module.css'
 
-interface ProcessControlBlockProps {
+export interface ProcessControlBlockProps {
   duration: number
   state: number
   pid: number
@@ -13,7 +13,7 @@ interface ProcessControlBlockProps {
 let countdownTimeout: NodeJS.Timeout
 
 export function ProcessControlBlock({ pid, priority, ...rest}:ProcessControlBlockProps) {
-  const { tick, nextToRun } = useContext(ProcessQueueContext)
+  const { tick, nextToRun, update } = useContext(ProcessQueueContext)
 
   const [duration, setDuration] = useState(rest.duration)
   const [render, setRender] = useState(true)
@@ -25,6 +25,7 @@ export function ProcessControlBlock({ pid, priority, ...rest}:ProcessControlBloc
   const [quantum, setQuantum] = useState(-1)
   const [quantumAux, setQuantumAux] = useState(quantum)
   const [addedPriority, setAddedPriority] = useState(0)
+  const [dead, setDead] = useState(false)
 
   useEffect(() => {
     switch (state) {
@@ -60,7 +61,9 @@ export function ProcessControlBlock({ pid, priority, ...rest}:ProcessControlBloc
         setColor('000000')
         setIsRunning(false)
         setTimeout(() => {
+          setState(STATUS.SUPERSECRETSTATUS)
           setRender(false)
+          postDeath(false)
         }, 2000)
         break;
       case STATUS.BLOCKED:
@@ -79,6 +82,13 @@ export function ProcessControlBlock({ pid, priority, ...rest}:ProcessControlBloc
     }
     
   }, [tick])
+
+  function postDeath(dead: boolean) {
+    if(!dead) {
+      setDead(false)
+      update({duration:rest.duration, pid, state: STATUS.DEAD, priority})
+    }
+  }
 
   useEffect(() => {
     setColor(color)

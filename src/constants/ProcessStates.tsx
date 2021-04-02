@@ -4,5 +4,6 @@ export const STATUS = {
   RUNNING: 2,
   WAITING: 3,
   DEAD: 4,
-  BLOCKED: 5
+  BLOCKED: 5,
+  SUPERSECRETSTATUS: 9000
 }
